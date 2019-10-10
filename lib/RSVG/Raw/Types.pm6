@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Comapt::Types;
+use GTK::Compat::Types;
 
 unit package RSVG::Raw::Types;
 
@@ -27,7 +27,7 @@ our enum RsvgHandleFlagsEnum is export (
    RSVG_HANDLE_FLAG_KEEP_IMAGE_DATA => 2
 );
 
-our constant RsvgErrorEnum is export := guint;
+our constant RsvgError is export := guint;
 our enum RsvgErrorEnum is export <
     RSVG_ERROR_FAILED
 >;

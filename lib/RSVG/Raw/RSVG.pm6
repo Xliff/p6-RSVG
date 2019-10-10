@@ -10,13 +10,13 @@ unit package RSVG::Raw::RSVG;
 our constant rsvg is export = 'rsvg-2',v2;
 
 sub rsvg_error_get_type ()
-  GType
+  returns GType
   is native(rsvg)
   is export
 { * }
 
 sub rsvg_handle_flags_get_type ()
-  GType
+  returns GType
   is native(rsvg)
   is export
 { * }
@@ -37,13 +37,13 @@ sub rsvg_handle_close (
 # { * }
 
 sub rsvg_handle_get_base_uri (RsvgHandle $handle)
-  returns char
+  returns Str
   is native(rsvg)
   is export
 { * }
 
 # sub rsvg_handle_get_desc (RsvgHandle $handle)
-#   returns char
+#   returns Str
 #   is native(rsvg)
 #   is export
 # { * }
@@ -67,7 +67,7 @@ sub rsvg_handle_get_dimensions_sub (
 { * }
 
 # sub rsvg_handle_get_metadata (RsvgHandle $handle)
-#   returns char
+#   returns Str
 #   is native(rsvg)
 #   is export
 # { * }
@@ -95,7 +95,7 @@ sub rsvg_handle_get_position_sub (
 { * }
 
 # sub rsvg_handle_get_title (RsvgHandle $handle)
-#   returns char
+#   returns Str
 #   is native(rsvg)
 #   is export
 # { * }

@@ -1,6 +1,7 @@
 use v6.c;
 
 use Method::Also;
+use NativeCall;
 
 use Cairo;
 
@@ -11,7 +12,7 @@ use RSVG::Raw::RSVG;
 
 use GTK::Compat::Roles::Object;
 
-class RSVG does {
+class RSVG {
   also does GTK::Compat::Roles::Object;
 
   has RsvgHandle $!rsvg;
@@ -51,7 +52,7 @@ class RSVG does {
     is also<new-from-file>
   {
     clear_error;
-    my $svg = rsvg_handle_new_from_file($file, $error);
+    my $svg = rsvg_handle_new_from_file($filename, $error);
     set_error($error);
 
     $svg ?? self.bless( :$svg ) !! Nil;
@@ -85,7 +86,7 @@ class RSVG does {
 
     clear_error;
     my $svg = rsvg_handle_new_from_stream_sync(
-      $!rsvg,
+      $input_stream,
       $base_file,
       $f,
       $cancellable,
@@ -127,7 +128,7 @@ class RSVG does {
   }
 
   method get_pixbuf (:$raw = False) is also<get-pixbuf> {
-    my $pixbuf = rsvg_handle_get_pixbuf_sub($!rsvg, $id);
+    my $pixbuf = rsvg_handle_get_pixbuf($!rsvg);
 
     $pixbuf ??
       ( $raw ?? $pixbuf !! GTK::Compat::Pixbuf.new($pixbuf) )
