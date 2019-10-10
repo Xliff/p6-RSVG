@@ -10,6 +10,8 @@ use RSVG::Raw::Types;
 
 use RSVG::Raw::RSVG;
 
+use GTK::Compat::Pixbuf;
+
 use GTK::Compat::Roles::Object;
 
 class RSVG {
@@ -111,7 +113,13 @@ class RSVG {
     $rv;
   }
 
-  method get_base_uri is also<get-base-uri> {
+  method get_base_uri
+    is also<
+      get-base-uri
+      base_uri
+      base-uri
+    >
+  {
     rsvg_handle_get_base_uri($!rsvg);
   }
 
@@ -127,7 +135,12 @@ class RSVG {
     rsvg_handle_get_dimensions_sub($!rsvg, $dimension_data, $id);
   }
 
-  method get_pixbuf (:$raw = False) is also<get-pixbuf> {
+  method get_pixbuf (:$raw = False)
+    is also<
+      get-pixbuf
+      pixbuf
+    >
+  {
     my $pixbuf = rsvg_handle_get_pixbuf($!rsvg);
 
     $pixbuf ??
@@ -168,8 +181,8 @@ class RSVG {
   }
 
   method read_stream_sync (
-    GInputStream $stream,
-    GCancellable $cancellable,
+    GInputStream() $stream,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<read-stream-sync>
@@ -197,12 +210,21 @@ class RSVG {
     rsvg_handle_set_base_gfile($!rsvg, $base_file);
   }
 
-  method set_dpi (gdouble $dpi) is also<set-dpi> {
-    rsvg_handle_set_dpi($!rsvg, $dpi);
+  method set_dpi (Num() $dpi) is also<set-dpi> {
+    my gdouble $d = $dpi;
+    rsvg_handle_set_dpi($!rsvg, $d);
   }
 
-  method set_dpi_x_y (gdouble $dpi_x, gdouble $dpi_y) is also<set-dpi-x-y> {
-    rsvg_handle_set_dpi_x_y($!rsvg, $dpi_x, $dpi_y);
+  method set_dpi_x_y (Num() $dpi_x, Num() $dpi_y)
+    is also<
+      set-dpi-x-y
+      set_dpi_xy
+      set-dpi-xy
+    >
+  {
+    my gdouble ($dx, $dy);
+
+    rsvg_handle_set_dpi_x_y($!rsvg, $dx, $dy);
   }
 
   method render_cairo ($cr) is also<render-cairo> {
