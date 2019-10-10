@@ -72,6 +72,12 @@ sub rsvg_handle_get_dimensions_sub (
 #   is export
 # { * }
 
+sub rsvg_handle_get_pixbuf (RsvgHandle $handle)
+  returns GdkPixbuf
+  is native(rsvg)
+  is export
+{ * }
+
 sub rsvg_handle_get_pixbuf_sub (RsvgHandle $handle, Str $id)
   returns GdkPixbuf
   is native(rsvg)
