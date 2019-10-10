@@ -18,10 +18,7 @@ $svg.set-dpi(80);
 
 $a.activate.tap({
   $a.wait-for-init;
-
-  my $image = GTK::Image.new-from-pixbuf($svg.pixbuf);
-  $a.window.destroy-signal.tap({ $a.exit });
-  $a.window.add($image);
+  $a.window.add( GTK::Image.new-from-pixbuf($svg.pixbuf) );
   $a.window.show-all;
 });
 
