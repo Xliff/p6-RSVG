@@ -271,7 +271,7 @@ class RSVG {
     rsvg_handle_set_dpi_x_y($!rsvg, $dx, $dy);
   }
 
-  method render_cairo ($cr) is also<render-cairo> {
+  method render_cairo ($cr is copy) is also<render-cairo> {
     $cr .= context if $cr ~~ Cairo::Context;
     die '$cr parameter must be a cairo_t compatible type!'
       unless $cr ~~ cairo_t;

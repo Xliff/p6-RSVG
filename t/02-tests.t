@@ -6,7 +6,12 @@ use Test;
 use File::Find;
 
 use Cairo;
+
+use GTK::Compat::Types;
+
 use RSVG;
+
+use GTK::Compat::Roles::GFile;
 
 constant FRAME_SIZE = 47;
 constant MAX_DIFF   = 20;
@@ -17,17 +22,18 @@ sub buffer-diff-core ($buf-a, $buf-b, $buf-diff, $w, $h, $s is copy, $m) {
 
   $s /= nativesizeof(uint32);
 
-  for ^$w x ^$h -> ($x, $y) {
+  for ^$w X ^$h -> ($x, $y) {
     my $pos = $y * $s + $x;
     my ($pix-a, $pix-b, $pix-diff) = (
       $buf-a.subbuf($pos, $s).read-uint32,
       $buf-b.subbuf($pos, $s).read-uint32,
-      $buff-diff.subbuf($pos, $s);
+      $buf-diff.subbuf($pos, $s)
     );
 
-    if $row-a != $row-b {
+    if $pix-a != $pix-b {
       my $diff-pix;
-      for <a r g b>:k {
+      # Compare channels in reverse ARGB order.
+      for <b g r a>.k {
           my $value-a = ($pix-a +> $_ * 8) +& 0xff;
           my $value-b = ($pix-b +> $_ * 8) +& 0xff;
           my $diff = ($value-a - $value-b).abs;
@@ -46,7 +52,7 @@ sub buffer-diff-core ($buf-a, $buf-b, $buf-diff, $w, $h, $s is copy, $m) {
         $diff-pix = 0;
       }
       $diff-pix +|= 0xff000000;
-      $buff-diff.write-uint32($diff-pix);
+      $buf-diff.write-uint32($diff-pix);
     }
   }
 
@@ -55,9 +61,10 @@ sub buffer-diff-core ($buf-a, $buf-b, $buf-diff, $w, $h, $s is copy, $m) {
 
 sub compare-surfaces($sa, $sb, $sd) {
   buffer-diff-core(
-    nativecast(Blob, $sa.data),
-    nativecast(Blob, $sb.data),
-    nativecast(buf8, $sd.data),
+    # XXX - Must fix!
+    OpaquePointer, # nativecast(Blob, $sa.data),
+    OpaquePointer, # nativecast(Blob, $sb.data),
+    OpaquePointer, # nativecast(Buf,  $sd.data),
     $sa.width,
     $sa.height,
     $sa.stride,
@@ -67,8 +74,8 @@ sub compare-surfaces($sa, $sb, $sd) {
 
 sub extract-rectangle($s, $x, $y, $w, $h) {
   my $dest = Cairo::Image.create(CAIRO_FORMAT_ARGB32, $w, $h);
-  my $cr   = Cairo::Context.create($dest);
-  $cr.set_source_surface($cr, -$x, -$y);
+  my $cr   = Cairo::Context.new($dest);
+  $cr.set_source_surface($s, -$x, -$y);
   $cr.paint;
   $cr.destroy;
   $dest;
@@ -89,14 +96,15 @@ sub extract-rectangle($s, $x, $y, $w, $h) {
 sub rsvg-cairo-check($file) {
   my $test-file-base = $file;
 
-  $test-file-base.extension('') if $file.extension eq 'svg';
+  $test-file-base .= extension('') if $file.extension eq 'svg';
   my $test-file = GTK::Compat::Roles::GFile.new-for-path($file);
-  my $rsvg      = RSVG.new-from-gfile-sync($file);
+  my $rsvg      = RSVG.new-from-gfile-sync($test-file);
   nok $ERROR, "No error detected when loading {$file}";
   ok  $rsvg,  'Resulting SVG object is defined';
 
-  $rsvg.internal-set-testing(True);
-  $rsvg.set-dpi-xy( $file.contains('-48dpi') ?? 48 !! 72 );
+  #$rsvg.internal-set-testing(True);
+  my @dpi = $file.contains('-48dpi') ?? 48 !! 72 xx 2;
+  $rsvg.set-dpi-xy( |@dpi );
 
   my $d = $rsvg.get-dimensions;
   ok  $d.width > 0,   'Image width is greater than 0';
@@ -117,31 +125,35 @@ sub rsvg-cairo-check($file) {
     $d.width,   $d.height
   );
   $s.destroy;
-  save-image( $s-a, (my $out-fn = $base ~ '-out.png').IO );
+  $s-a.write_png($test-file-base ~ '-out.png');
 
-  my $s-b = Cairo::Image.create_from_png($base ~ '-ref.png');
+  my $ref = $test-file-base ~ '-ref.png';
+  my $s-b = Cairo::Image.open($ref);
+
   # Grab height width and stride from both surfaces.
-  my ($h-a, $w-a, $s-a) = <height width stride>».&{ $s-a."$_"() };
-  my ($h-b, $w-b, $s-b) = <height width stride>».&{ $s-b."$_"() };
+  my ($h-a, $w-a, $stride-a) = <height width stride>».&{ $s-a."$_"() };
+  my ($h-b, $w-b, $stride-b) = <height width stride>».&{ $s-b."$_"() };
 
-  is $w-b, $w-a, 'Image width matches';
-  is $h-b, $h-a, 'Image height matches';
-  is $s-b, $s-a, 'Image stride matches';
+  is $w-a,      $w-b,       'Image width matches';
+  is $h-a,      $h-b,       'Image height matches';
+  is $stride-a, $stride-b,  'Image stride matches';
   subtest 'Image diff tests' => sub {
     # This should fail and skip rest
     plan :skip-all<Cannot run due to property mismatch> unless [&&](
-      $w-b == $w-a,
-      $h-b == $h-a,
-      $s-b == $s-a
+      $w-b      == $w-a,
+      $h-b      == $h-a,
+      $stride-b == $stride-a
     );
     plan 1;
 
-    my %result = compare_surfaces($s-a, $s-b, $s-diff);
+    my $s-diff = Cairo::Image.create(CAIRO_FORMAT_ARGB32, $d.width, $d.height);
+    my %result = compare-surfaces($s-a, $s-b, $s-diff);
     #  Test is failure if > MAX_DIFF
-    if %result<pixels-changed> && $results<max-diff> > MAX_DIFF {
+    if %result<pixels-changed> && %result<max-diff> > MAX_DIFF {
       ok False, 'Image comparison failed (diff saved)';
     } else {
       # Save image if pixels-changed.
+      $s-diff.write_png($test-file-base ~ '-diff.png');
       ok True, %result<pixels-changed> ??
         'Image comparison within tolerance (diff saved)'
         !!
@@ -157,7 +169,11 @@ sub MAIN (*@files) {
     @files
     !!
     # For all SVG files in t/reftests
-    find( dir => "{$*CWD}/t/reftests", name => *.ends-with('svg') );
+    find(
+      dir     => "{$*CWD}/t/reftests",
+      name    => *.ends-with('svg'),
+      exclude => *.basename.starts-with('ignore-')
+    );
 
-  rsvg-cairo-check($_) for @svg;
+  rsvg-cairo-check($_) for @svg[^4];
 }
