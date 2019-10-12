@@ -123,16 +123,45 @@ class RSVG {
     rsvg_handle_get_base_uri($!rsvg);
   }
 
-  method get_dimensions (RsvgDimensionData $dimension_data)
+  proto method get_dimensions (|)
     is also<get-dimensions>
-  {
-    rsvg_handle_get_dimensions($!rsvg, $dimension_data);
+  { * }
+
+  # cw: Note for all routines that take an :$all parameter - 10/12/2019!!
+  #
+  # For most multi's that accept no arguments, but take a rw parameter, we
+  # may need to do something similar to the following.
+  multi method get_dimensions {
+    my $rv = samewith(RsvgDimensionData.new, :all);
+    $rv[0] ?? $rv[1] !! Nil;
+  }
+  multi method get_dimensions (RsvgDimensionData $dimension_data, :$all = False) {
+    my $rv = so rsvg_handle_get_dimensions($!rsvg, $dimension_data);
+    $rv = True; # For this call, rsvg_handle_get_dimensions always returns
+                # False. Note that this function is deprecated and only
+                # remains for testing purposes.
+    $all.not ?? $rv !! ($rv, $dimension_data);
   }
 
-  method get_dimensions_sub (RsvgDimensionData $dimension_data, Str() $id)
+  proto method get_dimensions_sub (|)
     is also<get-dimensions-sub>
-  {
-    rsvg_handle_get_dimensions_sub($!rsvg, $dimension_data, $id);
+  { * }
+
+  multi method get_dimensions_sub (Str() $id) {
+    my $rv = samewith(RsvgDimensionData.new, $id, :all);
+
+    $rv[0] ?? $rv[1] !! Nil;
+  }
+  multi method get_dimensions_sub (
+    RsvgDimensionData $dimension_data,
+    Str() $id,
+    :$all = False;
+  ) {
+    my $rv = so rsvg_handle_get_dimensions_sub($!rsvg, $dimension_data, $id);
+    $rv = True; # For this call, rsvg_handle_get_dimensions always returns
+                # False. Note that this function is deprecated and only
+                # remains for testing purposes.
+    $all.not ?? $rv !! ($rv, $dimension_data);
   }
 
   method get_pixbuf (:$raw = False)
@@ -158,10 +187,25 @@ class RSVG {
       Nil;
   }
 
-  method get_position_sub (RsvgPositionData $position_data, Str() $id)
+  proto method get_position_sub(|)
     is also<get-position-sub>
-  {
-    rsvg_handle_get_position_sub($!rsvg, $position_data, $id);
+  { * }
+
+  multi method get_position_sub (Str() $id) {
+    my $rv = samewith(RsvgPositionData.new, $id, :all);
+
+    $rv[0] ?? $rv[1] !! Nil;
+  }
+  multi method get_position_sub (
+    RsvgPositionData $position_data,
+    Str() $id,
+    :$all = False
+  ) {
+    my $rv = so rsvg_handle_get_position_sub($!rsvg, $position_data, $id);
+    $rv = True; # For this call, rsvg_handle_get_dimensions always returns
+                # False. Note that this function is deprecated and only
+                # remains for testing purposes.
+    $all.not ?? $rv !! ($rv, $position_data);
   }
 
   method get_type is also<get-type> {

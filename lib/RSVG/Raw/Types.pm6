@@ -20,6 +20,13 @@ class RsvgPositionData is repr<CStruct> is export does GTK::Roles::Pointers {
     has gint $.y is rw;
 }
 
+class RsvgRectangle is repr<CStruct> is export does GTK::Roles::Pointers {
+    has gdouble $.x      is rw;
+    has gdouble $.y      is rw;
+    has gdouble $.width  is rw;
+    has gdouble $.height is rw;
+}
+
 our constant RsvgHandleFlags is export := guint;
 our enum RsvgHandleFlagsEnum is export (
    RSVG_HANDLE_FLAGS_NONE           => 0,
