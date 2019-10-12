@@ -62,8 +62,8 @@ class RSVG {
 
   method new_from_gfile_sync (
     GFile() $file,
-    Int() $flags,
-    GCancellable $cancellable      = GCancellable,
+    Int() $flags                   = 0,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<new-from-gfile-sync>
