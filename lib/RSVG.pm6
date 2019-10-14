@@ -6,16 +6,17 @@ use NativeCall;
 use Cairo;
 
 use GTK::Compat::Types;
+use GTK::Compat::Value;
 use RSVG::Raw::Types;
 
 use RSVG::Raw::RSVG;
 
 use GTK::Compat::Pixbuf;
 
-use GTK::Compat::Roles::Object;
+use GTK::Roles::Properties;
 
 class RSVG {
-  also does GTK::Compat::Roles::Object;
+  also does GTK::Roles::Properties;
 
   has RsvgHandle $!rsvg;
 
@@ -106,6 +107,87 @@ class RSVG {
     $svg ?? self.bless( :$svg ) !! Nil;
   }
 
+  # Type: gchar
+  method base-uri is rw is also<base_uri> {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        # $gv = GTK::Compat::Value.new(
+        #   self.prop_get('base-uri', $gv)
+        # );
+        # $gv.string;
+
+        # Eschew property based FETCH for purpose built method.
+        self.get_base_uri;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('base-uri', $gv);
+      }
+    );
+  }
+
+
+  # Type: gdouble
+  method dpi-x is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('dpi-x', $gv)
+        );
+        $gv.double;
+      },
+      STORE => -> $, Num() $val is copy {
+        $gv.double = $val;
+
+        self.prop_set('dpi-x', $gv);
+      }
+    );
+  }
+
+  # Type: gdouble
+  method dpi-y is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('dpi-y', $gv)
+        );
+        $gv.double;
+      },
+      STORE => -> $, Num() $val is copy {
+        $gv.double = $val;
+
+        self.prop_set('dpi-y', $gv);
+      }
+    );
+  }
+
+  # Type: RsvgHandleFlags
+  method flags is rw  {
+
+    # Unless there is a reason for this to be user facing, it won't be.
+    sub flags_get_type {
+      state ($n, $t);
+
+      unstable_get_type( self.^name, &rsvg_handle_flags_get_type, $n, $t);
+    }
+
+    my GTK::Compat::Value $gv .= new(flags_get_type);
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('flags', $gv.flags)
+        );
+        $gv.flags;
+      },
+      STORE => -> $, $val is copy {
+        warn 'Can only set RsvgHandleFlags at construction time!';
+      }
+    );
+  }
+
   method close (CArray[Pointer[GError]] $error = gerror) {
     clear_error;
     my $rv = so rsvg_handle_close($!rsvg, $error);
@@ -113,13 +195,7 @@ class RSVG {
     $rv;
   }
 
-  method get_base_uri
-    is also<
-      get-base-uri
-      base_uri
-      base-uri
-    >
-  {
+  method get_base_uri is also<get-base-uri> {
     rsvg_handle_get_base_uri($!rsvg);
   }
 
@@ -173,22 +249,22 @@ class RSVG {
     my $pixbuf = rsvg_handle_get_pixbuf($!rsvg);
 
     $pixbuf ??
-      ( $raw ?? $pixbuf !! GTK::Compat::Pixbuf.new($pixbuf) )
-      !!
-      Nil;
+        ( $raw ?? $pixbuf !! GTK::Compat::Pixbuf.new($pixbuf) )
+        !!
+        Nil;
   }
 
   method get_pixbuf_sub (Str() $id, :$raw = False) is also<get-pixbuf-sub> {
     my $pixbuf = rsvg_handle_get_pixbuf_sub($!rsvg, $id);
 
     $pixbuf ??
-      ( $raw ?? $pixbuf !! GTK::Compat::Pixbuf.new($pixbuf) )
-      !!
-      Nil;
+        ( $raw ?? $pixbuf !! GTK::Compat::Pixbuf.new($pixbuf) )
+        !!
+        Nil;
   }
 
   proto method get_position_sub(|)
-    is also<get-position-sub>
+        is also<get-position-sub>
   { * }
 
   multi method get_position_sub (Str() $id) {
@@ -256,6 +332,7 @@ class RSVG {
 
   method set_dpi (Num() $dpi) is also<set-dpi> {
     my gdouble $d = $dpi;
+
     rsvg_handle_set_dpi($!rsvg, $d);
   }
 

@@ -2,3 +2,5 @@
 *.bak
 *.ipynb
 *.log
+*-diff.png
+*-out.png
