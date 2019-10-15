@@ -18,19 +18,20 @@ constant MAX_DIFF      = 20;
 constant WARN_DIFF     = 2;
 constant TESTS_PER_SVG = 9;
 
-sub buffer-diff-core ($buf-a, $buf-b, $w, $h, $s is copy, $m) {
+my $TEST-DEBUG = False;
+
+sub buffer-diff-core ($buf-a, $buf-b, $buf-d, $w, $h, $s is copy, $m) {
   my %r;
 
-  $s /= nativesizeof(uint32);
+  #$s /= nativesizeof(uint32);
 
-  # Bit of a pause here if either dimension is > 250. I thought these
-  # lazy lists wouldn't do that!
-  %r<buf-diff> = Buf.allocate($buf-a.elems);
+  diag "W: {$w}, H: {$h}, S: {$s}" if $TEST-DEBUG;
 
+  my @order = <a r g b>;
   my uint32 ($x, $y) = 0 xx 4;
   loop ($x = 0; $x < $w; $x++) {
     loop ($y = 0; $y < $h; $y++) {
-      my uint64 $pos = ($y * $s * 4 + $x).Int;
+      my uint64 $pos = ($y * $s + $x).Int;
       my uint32 ($pix_a, $pix_b, $pix_diff) = (
         $buf-a.read-uint32($pos),
         $buf-b.read-uint32($pos),
@@ -38,44 +39,49 @@ sub buffer-diff-core ($buf-a, $buf-b, $w, $h, $s is copy, $m) {
       );
 
       if $pix_a != $pix_b {
+        diag "Pixel mismatch at ({$x}, {$y})" if $TEST-DEBUG;
         my uint32 $diff-pix = 0;
-        # Compare channels in reverse ARGB order.\
-        my %pd;
-        for <b g r a>.keys {
-            my $value_a = ( $pix_a +> ($_ * 8) ) +& 0xff;
-            my $value_b = ( $pix_b +> ($_ * 8) ) +& 0xff;
+        # Compare channels in reverse ARGB order.
+        for @order.reverse.kv -> $k, $v {
+            my $value_a = ( $pix_a +> ($k * 8) ) +& 0xff;
+            my $value_b = ( $pix_b +> ($k * 8) ) +& 0xff;
             my $diff = ($value_a - $value_b).abs;
             %r<max-diff> = (%r<max-diff>, $diff).max;
             $diff *= 4;
             $diff += 128 if $diff;
             $diff  = 255 if $diff > 255;
-            $diff-pix +|= ( $diff +< ($_ * 8) );
-            %pd{"diff-$_"}++ unless $_ eq 'a';
-            %pd<diff-r diff-g diff-b> = 0 xx 3
-              if $_ eq 'a' && $value_b == 0;
+            $diff-pix +|= ( $diff +< ($k * 8) );
+
+            diag "\tMismatched {$v} channel: {$value_b} vs {$value_a}"
+              if $diff && $TEST-DEBUG;
         }
 
         %r<pixels-changed>++;
-        %r<diff-a>++ if %pd<diff-r> || %pd<diff-g> || %pd<diff-b>;
         unless $diff-pix +^ 0x00ffffff {
           # Alpha only diff. Convert to luminance
           my uint32 $alpha = ($diff-pix +> 24) +& 0xff;
           $diff-pix = $alpha * 0x010101;
         }
+
+        # Write difference pixel back to image buffer.
         $diff-pix +|= 0xff000000;
-        %r<buf-diff>.write-uint32($pos, $diff-pix);
+        for @order.kv -> $k, $v {
+          my $val = ( $diff-pix +> ( (@order.elems - $k - 1) * 8 ) ) +& 0xff;
+          $buf-d[$pos + $k] = $val;
+        }
       }
     }
   }
-  diag %r.gist;
+  diag %r.gist if $TEST-DEBUG;
 
   %r;
 }
 
-sub compare-surfaces($sa, $sb) {
+sub compare-surfaces($sa, $sb, $sd) {
   buffer-diff-core(
-    $sa.Blob,
-    $sb.Blob,
+    $sa.data,
+    $sb.data,
+    $sd.data-rw,
     $sa.width,
     $sa.height,
     $sa.stride,
@@ -164,13 +170,12 @@ sub rsvg-cairo-check($file) {
     );
     plan 1;
 
-    # $s-diff comes from Cairo as a Blob, check to see if it remains attached
-    # to the actual Cairo buffer.
-    my %result = compare-surfaces($s-a, $s-b);
+    my $s-d = Cairo::Image.create(CAIRO_FORMAT_ARGB32, $d.width, $d.height);
+    my %result = compare-surfaces($s-a, $s-b, $s-d);
     #  Test is failure if pixels have changed and %result<max-diff> > MAX_DIFF
     if %result<pixels-changed> && %result«max-diff» > MAX_DIFF {
       ok False, "Image comparison failed [{
-                 %result<pixels-changed>} pix / {%result<diff-a>}α {
+                 %result<pixels-changed>} pix / {
                  %result<max-diff>} max] (diff saved)";
     } else {
       # Save image if pixels-changed.
@@ -181,19 +186,14 @@ sub rsvg-cairo-check($file) {
         !!
         'Image comparison passes';
     }
-    if %result<pixels-changed> {
-      my $bd = Cairo::Image.create(
-        CAIRO_FORMAT_ARGB32,
-        $d.width, $d.height,
-        %result<buf-diff>
-      );
-      $bd.write_png($test-file-base ~ '-diff.png');
-    }
+    $s-d.write_png($test-file-base ~ '-diff.png') if %result<pixels-changed>;
   };
 
 }
 
-sub MAIN (*@files) {
+sub MAIN (:$debug = False, *@files) {
+  $TEST-DEBUG = $debug;
+
   my @svg = @files ??
     # For all files on command line
     @files
