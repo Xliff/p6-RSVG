@@ -6,7 +6,7 @@ use NativeCall;
 use Cairo;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
+use GLib::Value;
 use RSVG::Raw::Types;
 
 use RSVG::Raw::RSVG;
@@ -109,10 +109,10 @@ class RSVG {
 
   # Type: gchar
   method base-uri is rw is also<base_uri> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    #my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        # $gv = GTK::Compat::Value.new(
+        # $gv = GLib::Value.new(
         #   self.prop_get('base-uri', $gv)
         # );
         # $gv.string;
@@ -130,10 +130,10 @@ class RSVG {
 
   # Type: gdouble
   method dpi-x is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
+    my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('dpi-x', $gv)
         );
         $gv.double;
@@ -148,10 +148,10 @@ class RSVG {
 
   # Type: gdouble
   method dpi-y is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
+    my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('dpi-y', $gv)
         );
         $gv.double;
@@ -174,10 +174,10 @@ class RSVG {
       unstable_get_type( self.^name, &rsvg_handle_flags_get_type, $n, $t);
     }
 
-    my GTK::Compat::Value $gv .= new(flags_get_type);
+    my GLib::Value $gv .= new(flags_get_type);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('flags', $gv.flags)
         );
         $gv.flags;
