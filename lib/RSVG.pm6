@@ -109,7 +109,7 @@ class RSVG {
 
   # Type: gchar
   method base-uri is rw is also<base_uri> {
-    #my GLib::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         # $gv = GLib::Value.new(
