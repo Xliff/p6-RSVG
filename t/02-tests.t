@@ -11,7 +11,7 @@ use GTK::Compat::Types;
 
 use RSVG;
 
-use GTK::Compat::Roles::GFile;
+use GIO::Roles::GFile;
 
 constant FRAME_SIZE    = 47;
 constant MAX_DIFF      = 20;
@@ -100,7 +100,7 @@ sub extract-rectangle($s, $x, $y, $w, $h) {
 
 # sub read-png($bn) {
 #   my $ref = $bn ~ '-ref.png'
-#   my $of  = GTK::Compat::Roles::GFile.new-for-uri($bn);
+#   my $of  = GIO::Roles::GFile.new-for-uri($bn);
 #   my $s   = $of.read;
 #   nok $ERROR, 'No error detected during read preparation';
 #   ok  $s,     "Can read in a stream from {$ref}";
@@ -114,7 +114,7 @@ sub rsvg-cairo-check($file) {
   my $test-file-base = $file;
 
   $test-file-base .= extension('') if $file.extension eq 'svg';
-  my $test-file = GTK::Compat::Roles::GFile.new-for-path($file);
+  my $test-file = GIO::Roles::GFile.new-for-path($file);
   my $rsvg      = RSVG.new-from-gfile-sync($test-file);
   nok $ERROR, "No error detected when loading {$file}";
   ok  $rsvg,  'Resulting SVG object is defined';
