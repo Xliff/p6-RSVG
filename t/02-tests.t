@@ -7,7 +7,7 @@ use File::Find;
 
 use Cairo;
 
-use GTK::Compat::Types;
+use RSVG::Raw::Types;
 
 use RSVG;
 
@@ -114,7 +114,7 @@ sub rsvg-cairo-check($file) {
   my $test-file-base = $file;
 
   $test-file-base .= extension('') if $file.extension eq 'svg';
-  my $test-file = GIO::Roles::GFile.new-for-path($file);
+  my $test-file = GIO::Roles::GFile.new_for_path($file);
   my $rsvg      = RSVG.new-from-gfile-sync($test-file);
   nok $ERROR, "No error detected when loading {$file}";
   ok  $rsvg,  'Resulting SVG object is defined';

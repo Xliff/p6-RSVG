@@ -1,6 +1,6 @@
 use v6.c;
 
-use GTK::Compat::Types;
+use RSVG::Raw::Types;
 
 use RSVG;
 

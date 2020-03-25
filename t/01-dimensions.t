@@ -2,7 +2,7 @@ use v6.c;
 
 use Test;
 
-use GTK::Compat::Types;
+use RSVG::Raw::Types;
 
 use RSVG;
 
