@@ -2,7 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
 use RSVG::Raw::Types;
 
 unit package RSVG::Raw::RSVG;

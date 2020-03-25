@@ -1,42 +1,41 @@
 use v6.c;
 
-use NativeCall;
+use CompUnit::Util :re-export;
+use GLib::Raw::Exports;
+use Pango::Raw::Exports;
+use GIO::Raw::Exports;
+use GDK::Raw::Exports;
+use RSVG::Raw::Exports;
 
-use GTK::Compat::Types;
+unit package GDK::Raw::Types;
 
-use GLib::Roles::Pointers;
+need Cairo;
+need GLib::Raw::Definitions;
+need GLib::Raw::Enums;
+need GLib::Raw::Structs;
+need GLib::Raw::Struct_Subs;
+need GLib::Raw::Subs;
+need Pango::Raw::Definitions;
+need Pango::Raw::Enums;
+need Pango::Raw::Structs;
+need Pango::Raw::Subs;
+need GIO::DBus::Raw::Types;
+need GIO::Raw::Definitions;
+need GIO::Raw::Enums;
+need GIO::Raw::Structs;
+need GIO::Raw::Subs;
+need GIO::Raw::Exports;
+need GDK::Raw::Definitions;
+need GDK::Raw::Enums;
+need GDK::Raw::Structs;
+need GDK::Raw::Subs;
+need RSVG::Raw::Definitions;
 
-unit package RSVG::Raw::Types;
-
-class RsvgHandle        is repr<CPointer> is export does GLib::Roles::Pointers { }
-
-class RsvgDimensionData is repr<CStruct>  is export does GLib::Roles::Pointers {
-    has gint    $.width  is rw;
-    has gint    $.height is rw;
-    has gdouble $.em     is rw;
-    has gdouble $.ex     is rw;
+BEGIN {
+  re-export($_) for
+    |@glib-exports,
+    |@pango-exports,
+    |@gio-exports,
+    |@gdk-exports,
+    |@rsvg-exports;
 }
-
-class RsvgPositionData is repr<CStruct> is export does GLib::Roles::Pointers {
-    has gint $.x is rw;
-    has gint $.y is rw;
-}
-
-class RsvgRectangle is repr<CStruct> is export does GLib::Roles::Pointers {
-    has gdouble $.x      is rw;
-    has gdouble $.y      is rw;
-    has gdouble $.width  is rw;
-    has gdouble $.height is rw;
-}
-
-our constant RsvgHandleFlags is export := guint;
-our enum RsvgHandleFlagsEnum is export (
-   RSVG_HANDLE_FLAGS_NONE           => 0,
-   RSVG_HANDLE_FLAG_UNLIMITED       => 1,
-   RSVG_HANDLE_FLAG_KEEP_IMAGE_DATA => 2
-);
-
-our constant RsvgError is export := guint;
-our enum RsvgErrorEnum is export <
-    RSVG_ERROR_FAILED
->;
