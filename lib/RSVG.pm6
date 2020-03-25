@@ -5,20 +5,18 @@ use NativeCall;
 
 use Cairo;
 
-use GTK::Compat::Types;
-use GLib::Value;
 use RSVG::Raw::Types;
-
 use RSVG::Raw::RSVG;
 
-use GTK::Compat::Pixbuf;
+use GLib::Value;
+use GDK::Pixbuf;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Object;
 
 class RSVG {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Object;
 
-  has RsvgHandle $!rsvg;
+  has RsvgHandle $!rsvg is implementor;
 
   submethod BUILD (:$svg) {
     $!rsvg = $svg;
@@ -26,7 +24,7 @@ class RSVG {
     self.roleInit-Object;
   }
 
-  method RSVG::Types::Raw::RsvgHandle
+  method RSVG::Raw::Definitions::RsvgHandle
     is also<RsvgHandle>
   { $!rsvg }
 
@@ -111,7 +109,7 @@ class RSVG {
   method base-uri is rw is also<base_uri> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         # $gv = GLib::Value.new(
         #   self.prop_get('base-uri', $gv)
         # );
@@ -132,7 +130,7 @@ class RSVG {
   method dpi-x is rw  {
     my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('dpi-x', $gv)
         );
@@ -150,7 +148,7 @@ class RSVG {
   method dpi-y is rw  {
     my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('dpi-y', $gv)
         );
@@ -176,7 +174,7 @@ class RSVG {
 
     my GLib::Value $gv .= new(flags_get_type);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('flags', $gv.flags)
         );
@@ -249,22 +247,22 @@ class RSVG {
     my $pixbuf = rsvg_handle_get_pixbuf($!rsvg);
 
     $pixbuf ??
-        ( $raw ?? $pixbuf !! GTK::Compat::Pixbuf.new($pixbuf) )
+        ( $raw ?? $pixbuf !! GDK::Pixbuf.new($pixbuf) )
         !!
-        Nil;
+        GdkPixbuf;
   }
 
   method get_pixbuf_sub (Str() $id, :$raw = False) is also<get-pixbuf-sub> {
     my $pixbuf = rsvg_handle_get_pixbuf_sub($!rsvg, $id);
 
     $pixbuf ??
-        ( $raw ?? $pixbuf !! GTK::Compat::Pixbuf.new($pixbuf) )
+        ( $raw ?? $pixbuf !! GDK::Pixbuf.new($pixbuf) )
         !!
-        Nil;
+        GdkPixbuf;
   }
 
   proto method get_position_sub(|)
-        is also<get-position-sub>
+    is also<get-position-sub>
   { * }
 
   multi method get_position_sub (Str() $id) {
