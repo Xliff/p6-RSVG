@@ -4,3 +4,4 @@
 *.log
 *-diff.png
 *-out.png
+.touch/
