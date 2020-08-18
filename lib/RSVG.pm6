@@ -5,20 +5,19 @@ use NativeCall;
 
 use Cairo;
 
-use GTK::Compat::Types;
-use GLib::Value;
+use GLib::Raw::Types;
+use GIO::Raw::Types;
 use RSVG::Raw::Types;
-
 use RSVG::Raw::RSVG;
 
-use GTK::Compat::Pixbuf;
+use GDK::Pixbuf;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Object;
 
 class RSVG {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Object;
 
-  has RsvgHandle $!rsvg;
+  has RsvgHandle $!rsvg is implementor;
 
   submethod BUILD (:$svg) {
     $!rsvg = $svg;
@@ -351,7 +350,7 @@ class RSVG {
   method render_cairo ($cr is copy) is also<render-cairo> {
     $cr .= context if $cr ~~ Cairo::Context;
     die '$cr parameter must be a cairo_t compatible type!'
-      unless $cr ~~ cairo_t;
+      unless $cr ~~ Cairo::cairo_t;
 
     rsvg_handle_render_cairo($!rsvg, $cr);
   }
@@ -359,7 +358,7 @@ class RSVG {
   method render_cairo_sub ($cr, Str $id) is also<render-cairo-sub> {
     $cr .= context if $cr ~~ Cairo::Context;
     die '$cr parameter must be a cairo_t compatible type!'
-      unless $cr ~~ cairo_t;
+      unless $cr ~~ Cairo::cairo_t;
 
     rsvg_handle_render_cairo_sub($!rsvg, $cr, $id);
   }

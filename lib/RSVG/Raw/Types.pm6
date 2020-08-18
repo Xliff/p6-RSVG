@@ -2,25 +2,30 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Definitions;
+
+use GLib::Roles::Pointers;
 
 unit package RSVG::Raw::Types;
 
-class RsvgHandle        is repr<CPointer> is export does GTK::Roles::Pointers { }
+# Project forced rebuild count.
+constant forced = 1;
 
-class RsvgDimensionData is repr<CStruct>  is export does GTK::Roles::Pointers {
+class RsvgHandle        is repr<CPointer> is export does GLib::Roles::Pointers { }
+
+class RsvgDimensionData is repr<CStruct>  is export does GLib::Roles::Pointers {
     has gint    $.width  is rw;
     has gint    $.height is rw;
     has gdouble $.em     is rw;
     has gdouble $.ex     is rw;
 }
 
-class RsvgPositionData is repr<CStruct> is export does GTK::Roles::Pointers {
+class RsvgPositionData is repr<CStruct> is export does GLib::Roles::Pointers {
     has gint $.x is rw;
     has gint $.y is rw;
 }
 
-class RsvgRectangle is repr<CStruct> is export does GTK::Roles::Pointers {
+class RsvgRectangle is repr<CStruct> is export does GLib::Roles::Pointers {
     has gdouble $.x      is rw;
     has gdouble $.y      is rw;
     has gdouble $.width  is rw;

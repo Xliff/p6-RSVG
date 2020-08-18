@@ -2,7 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Definitions;
 use RSVG::Raw::Types;
 
 unit package RSVG::Raw::RSVG;
