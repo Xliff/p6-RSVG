@@ -9,7 +9,7 @@ use GLib::Roles::Pointers;
 unit package RSVG::Raw::Types;
 
 # Project forced rebuild count.
-constant forced = 1;
+constant forced = 9;
 
 class RsvgHandle        is repr<CPointer> is export does GLib::Roles::Pointers { }
 
