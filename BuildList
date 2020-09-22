@@ -1,9 +1,0 @@
-Cairo
-GLib::Value
-GTK::Compat::Pixbuf
-GTK::Compat::Types
-GTK::Roles::Properties
-Method::Also
-RSVG::Raw::Types
-RSVG::Raw::RSVG
-RSVG
