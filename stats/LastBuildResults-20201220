@@ -1,0 +1,200 @@
+Dependency Generation
+=====================
+real 0.47
+user 0.72
+sys 0.06
+ === Cairo ===
+Stage start      :   0.000
+Stage parse      :   1.478
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GDK::Pixbuf ===
+Stage start      :   0.000
+Stage parse      :   2.163
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.001
+Stage mbc        :   0.011
+Stage moar       :   0.000
+ === GDK::Raw::Definitions ===
+Stage start      :   0.000
+Stage parse      :   1.537
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.001
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GIO::Raw::Definitions ===
+Stage start      :   0.000
+Stage parse      :   1.668
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.002
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GIO::Raw::Types ===
+Stage start      :   0.000
+Stage parse      :   1.806
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.007
+Stage mast       :   0.010
+Stage mbc        :   0.006
+Stage moar       :   0.000
+ === GLib::Raw::Definitions ===
+Stage start      :   0.000
+Stage parse      :   1.507
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.002
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GLib::Raw::Structs ===
+Stage start      :   0.000
+Stage parse      :   1.626
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.001
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GLib::Raw::Types ===
+Stage start      :   0.000
+Stage parse      :   1.680
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.054
+Stage mast       :   0.008
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GLib::Roles::Object ===
+Stage start      :   0.000
+Stage parse      :   1.834
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.001
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GLib::Roles::Pointers ===
+Stage start      :   0.000
+Stage parse      :   1.494
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.001
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === Method::Also ===
+Stage start      :   0.000
+Stage parse      :   1.409
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.000
+Stage moar       :   0.000
+ === NativeCall ===
+Stage start      :   0.000
+Stage parse      :   1.450
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.001
+Stage mbc        :   0.000
+Stage moar       :   0.000
+ === RSVG::Raw::Types ===
+Stage start      :   0.000
+
+    precomp lib/RSVG/Raw/Types.pm6
+    Stage start      :   0.000
+    Stage parse      :   1.617
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.003
+    Stage mast       :   0.052
+    Stage mbc        :   0.002
+Stage parse      :   3.141
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.000
+Stage moar       :   0.000
+ === RSVG::Raw::RSVG ===
+Stage start      :   0.000
+
+    precomp lib/RSVG/Raw/RSVG.pm6
+    Stage start      :   0.000
+    Stage parse      :   3.192
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.014
+    Stage mast       :   0.096
+    Stage mbc        :   0.033
+Stage parse      :   4.849
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.012
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === RSVG ===
+Stage start      :   0.000
+
+    precomp lib/RSVG.pm6
+    Stage start      :   0.000
+    Stage parse      :   3.140
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.031
+    Stage mast       :   0.113
+    Stage mbc        :   0.017
+Adding alias in RSVG for RsvgHandle...
+Stage parse      :   4.981
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.000
+Stage moar       :   0.000
+Adding alias in RSVG for new-from-data...
+Adding alias in RSVG for new-from-file...
+Adding alias in RSVG for new-from-gfile-sync...
+Adding alias in RSVG for new-from-stream-sync...
+Adding alias in RSVG for new-with-flags...
+Adding alias in RSVG for base_uri...
+Adding alias in RSVG for get-base-uri...
+Adding alias in RSVG for get-dimensions...
+Adding alias in RSVG for get-dimensions-sub...
+Adding alias in RSVG for get-pixbuf...
+Adding alias in RSVG for pixbuf...
+Adding alias in RSVG for get-pixbuf-sub...
+Adding alias in RSVG for get-position-sub...
+Adding alias in RSVG for get-type...
+Adding alias in RSVG for has-sub...
+Adding alias in RSVG for internal-set-testing...
+Adding alias in RSVG for read-stream-sync...
+Adding alias in RSVG for rsvg-cleanup...
+Adding alias in RSVG for rsvg-error-quark...
+Adding alias in RSVG for set-base-gfile...
+Adding alias in RSVG for set-dpi...
+Adding alias in RSVG for set-dpi-x-y...
+Adding alias in RSVG for set_dpi_xy...
+Adding alias in RSVG for set-dpi-xy...
+Adding alias in RSVG for render-cairo...
+Adding alias in RSVG for render-cairo-sub...
+Roles: ((Object))
+R: GLib::Roles::Object
+
+real 35.27
+user 42.15
+sys 2.42
