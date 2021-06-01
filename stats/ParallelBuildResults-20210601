@@ -1,0 +1,183 @@
+ === GIO::Raw::Definitions === 
+Stage start      :   0.000
+Stage parse      :   3.420
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.002
+Stage moar       :   0.000
+
+GIO::Raw::Definitions compile time: 4.4412134
+ === Method::Also === 
+Stage start      :   0.000
+Stage parse      :   3.048
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.004
+Stage mbc        :   0.001
+Stage moar       :   0.000
+
+Method::Also compile time: 4.4144013
+ === GLib::Roles::Pointers === 
+Stage start      :   0.000
+Stage parse      :   3.619
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.002
+Stage moar       :   0.000
+
+GLib::Roles::Pointers compile time: 5.04156442
+ === GLib::Raw::Structs === 
+Stage start      :   0.000
+Stage parse      :   3.966
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.002
+Stage moar       :   0.000
+
+GLib::Raw::Structs compile time: 5.0788841
+ === GDK::Raw::Definitions === 
+Stage start      :   0.000
+Stage parse      :   3.957
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.002
+Stage mbc        :   0.001
+Stage moar       :   0.000
+
+GDK::Raw::Definitions compile time: 5.15330509
+ === GLib::Roles::Object === 
+Stage start      :   0.000
+Stage parse      :   3.870
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.002
+Stage mbc        :   0.003
+Stage moar       :   0.000
+
+GLib::Roles::Object compile time: 5.20306509
+ === GIO::Raw::Types === 
+Stage start      :   0.000
+Stage parse      :   4.031
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.008
+Stage mast       :   0.020
+Stage mbc        :   0.035
+Stage moar       :   0.000
+
+GIO::Raw::Types compile time: 5.44345165
+ === Cairo === 
+Stage start      :   0.000
+Stage parse      :   4.563
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.015
+Stage mbc        :   0.002
+Stage moar       :   0.000
+
+Cairo compile time: 5.76381133
+ === GLib::Raw::Definitions === 
+Stage start      :   0.000
+Stage parse      :   4.549
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.001
+Stage moar       :   0.000
+
+GLib::Raw::Definitions compile time: 5.91131827
+ === GLib::Raw::Types === 
+Stage start      :   0.000
+Stage parse      :   4.745
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.004
+Stage mast       :   0.010
+Stage mbc        :   0.005
+Stage moar       :   0.000
+
+GLib::Raw::Types compile time: 6.10570829
+ === GDK::Pixbuf === 
+Stage start      :   0.000
+Stage parse      :   5.503
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.001
+Stage mbc        :   0.013
+Stage moar       :   0.000
+
+GDK::Pixbuf compile time: 6.6913856
+ === RSVG::Raw::Types === 
+Stage start      :   0.000
+
+    precomp lib/RSVG/Raw/Types.pm6
+    Stage start      :   0.000
+    Stage parse      :   3.265
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.003
+    Stage mast       :   0.048
+    Stage mbc        :   0.002
+Stage parse      :   6.194
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.003
+Stage mbc        :   0.000
+Stage moar       :   0.000
+
+RSVG::Raw::Types compile time: 7.51836826
+ === RSVG::Raw::RSVG === 
+Stage start      :   0.000
+
+    precomp lib/RSVG/Raw/RSVG.pm6
+    Stage start      :   0.000
+    Stage parse      :   3.552
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.014
+    Stage mast       :   0.080
+    Stage mbc        :   0.039
+Stage parse      :   5.857
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.001
+Stage mbc        :   0.001
+Stage moar       :   0.000
+
+RSVG::Raw::RSVG compile time: 6.52010419
+ === RSVG === 
+Stage start      :   0.000
+
+    precomp lib/RSVG.pm6
+    Stage start      :   0.000
+    Stage parse      :   3.974
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.019
+    Stage mast       :   0.080
+    Stage mbc        :   0.025
+Stage parse      :   6.402
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.000
+Stage mast       :   0.001
+Stage mbc        :   0.001
+Stage moar       :   0.000
+
+RSVG compile time: 7.06732314
+
+Total compile time: 21.24368051s
